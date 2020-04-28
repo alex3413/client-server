@@ -11,16 +11,27 @@ int count = 0;
 void clientHandler(int index){
 	int strSize;
 	while(true){
-		recv(connections[index], (char*)&strSize, sizeof(int), NULL);
+	   int flag = recv(connections[index], (char*)&strSize, sizeof(int), NULL);
+	   cout<<"Some Thread flag: "<<flag<<" Number sock: "<<index<<endl;
+	   if(flag == -1){
+			int errorCS = closesocket(connections[index]);
+			cout<<"ErrorCS: "<<errorCS<< " WSA: ";
+			count--;
+			break; 
+		
+	}
 		char *str = new char[strSize+1];
 		str[strSize] = '\0';
 		recv(connections[index], str, sizeof(str), NULL);
+	
+		
 		for(int i=0; i<count; i++){
 			if(i == index)
 				continue;
 			send(connections[i], str, sizeof(str), NULL);
 		}
 		delete []str;
+	
 		
 	}
 }
@@ -39,13 +50,20 @@ int main(int argc, char** argv) {
 	inAddr.sin_port = htons(1111);
 	
 	SOCKET ssocket = socket(AF_INET, SOCK_STREAM, NULL);
+	
+	
 	bind(ssocket, (SOCKADDR*)&inAddr, sizeof(inAddr));
+	
+	/*DWORD nonBlocking = 1;
+	if(ioctlsocket(ssocket, FIONBIO, &nonBlocking) != 0){
+		cout<<"failed to set non-blocking"<<endl;
+	}*/
 	listen(ssocket, 3);
 	
 	int sizeSock = sizeof(inAddr);
 		
 	SOCKET connection;
-	for(int i = 0; i < 3;i++){
+	while(count<=3){
 		connection = accept(ssocket, (SOCKADDR*)&inAddr, &sizeSock);
 		if(connection == 0){
 	
@@ -54,12 +72,17 @@ int main(int argc, char** argv) {
 		else{
 			cout<<"Client Connected \n";
 			char msg[256];
-			recv(connection, msg, sizeof(msg), NULL );
+			int flag = recv(connection, msg, sizeof(msg), NULL );
+			cout<<"main thread flag: "<<flag<<endl;
 			cout<<msg<<endl;
 			Sleep(1000);
-			connections[i] = connection;
+			connections[count] = connection;
+			//closesocket(connection);
+			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)clientHandler,(LPVOID)(count), NULL, NULL);
 			count++;
-			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)clientHandler,(LPVOID)(i), NULL, NULL);
+			
+			
+			
 			}
 	}
 	system("pause");

@@ -42,10 +42,16 @@ int main(int argc, char** argv) {
 		while(true){
 			getline(cin, str);
 			int strSize = str.size();
+			string str1 = "end";
+			if(str == str1)
+				break;
 			send(csocket, (char*)&strSize, sizeof(int), NULL);
 			send(csocket, str.c_str(), sizeof(str), NULL);
 			Sleep(20);
+			
 		}
+	closesocket(csocket);
 	system("pause");
+	
 	return 0;
 }
