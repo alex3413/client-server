@@ -12,13 +12,11 @@ void clientHandler(int index){
 	int strSize;
 	while(true){
 	   int flag = recv(connections[index], (char*)&strSize, sizeof(int), NULL);
-	   cout<<"Some Thread flag: "<<flag<<" Number sock: "<<index<<endl;
 	   if(flag == -1){
-			int errorCS = closesocket(connections[index]);
-			cout<<"ErrorCS: "<<errorCS<< " WSA: ";
+			closesocket(connections[index]);
 			count--;
 			break; 
-		
+	
 	}
 		char *str = new char[strSize+1];
 		str[strSize] = '\0';
@@ -63,7 +61,7 @@ int main(int argc, char** argv) {
 	int sizeSock = sizeof(inAddr);
 		
 	SOCKET connection;
-	while(count<=3){
+	while(count <= 3){
 		connection = accept(ssocket, (SOCKADDR*)&inAddr, &sizeSock);
 		if(connection == 0){
 	
@@ -77,7 +75,6 @@ int main(int argc, char** argv) {
 			cout<<msg<<endl;
 			Sleep(1000);
 			connections[count] = connection;
-			//closesocket(connection);
 			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)clientHandler,(LPVOID)(count), NULL, NULL);
 			count++;
 			

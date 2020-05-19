@@ -1,6 +1,6 @@
 [Project]
-FileName=ssocket.dev
-Name=serversocket
+FileName=UDPSocket.dev
+Name=UDPSocket
 Type=1
 Ver=2
 ObjFiles=
@@ -19,7 +19,7 @@ ObjectOutput=
 LogOutput=
 LogOutputEnabled=0
 OverrideOutput=0
-OverrideOutputName=ssocket.exe
+OverrideOutputName=UDPSocket.exe
 HostApplication=
 UseCustomMakefile=0
 CustomMakefile=
@@ -28,7 +28,7 @@ Folders=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=00000000c0000000001000000
+CompilerSettings=00000000c0000000001001000
 UnitCount=1
 
 [VersionInfo]
@@ -51,7 +51,7 @@ AutoIncBuildNr=0
 SyncProduct=1
 
 [Unit1]
-FileName=ssocket.cpp
+FileName=serverSocketUDP.cpp
 CompileCpp=1
 Folder=
 Compile=1
